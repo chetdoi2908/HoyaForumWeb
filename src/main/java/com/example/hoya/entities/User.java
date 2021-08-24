@@ -2,16 +2,15 @@ package com.example.hoya.entities;
 
 import com.example.hoya.enums.Status;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
 @Entity
-@Data
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@Getter
+@Setter
+public class User extends BaseEntity{
 
     @Column(unique = true)
     private String username;
@@ -21,7 +20,7 @@ public class User {
     @Enumerated(EnumType.ORDINAL)
     private Status status;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "role_id")
     private Role role;
 
