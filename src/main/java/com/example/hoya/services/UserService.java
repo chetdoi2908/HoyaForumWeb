@@ -10,4 +10,5 @@ public interface UserService {
 
     User createUser(CreateUserModel user);
 
+    boolean deleteUser(Long userID);
 }
