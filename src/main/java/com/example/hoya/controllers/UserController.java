@@ -58,4 +58,10 @@ public class UserController {
         return user;
     }
 
+    @PostMapping("/resetpassword")
+    public User resetPassword(@RequestBody User user, String password){
+        userService.updatePasswordByUsername(user, password);
+        return user;
+    }
+
 }

@@ -10,4 +10,6 @@ public interface UserService {
 
     User createUser(CreateUserModel user);
 
+    User updatePasswordByUsername(User user, String password);
+
 }
