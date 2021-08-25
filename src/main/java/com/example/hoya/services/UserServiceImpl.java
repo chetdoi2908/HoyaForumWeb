@@ -48,4 +48,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.saveAndFlush(user);
     }
 
+    @Override
+    public boolean deleteUser(Long userID) {
+        User user = userRepository.findById(userID).get();
+        if(user != null){
+            user.setStatus(Status.INACTIVE);
+            userRepository.save(user);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 }
