@@ -7,7 +7,6 @@ import com.example.hoya.entities.UserPrincipal;
 import com.example.hoya.enums.Status;
 import com.example.hoya.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,8 +19,6 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     RoleService roleService;
-    @Autowired
-    PasswordEncoder passwordEncoder;
 
 
     @Override
@@ -49,12 +46,6 @@ public class UserServiceImpl implements UserService {
         user.setRole(roleService.findById(2L));
         user.setStatus(Status.ACTIVE);
         return userRepository.saveAndFlush(user);
-    }
-
-    @Override
-    public User updatePasswordByUsername(User user, String password) {
-        user.setPassword(passwordEncoder.encode(password));
-        return userRepository.save(user);
     }
 
 }
