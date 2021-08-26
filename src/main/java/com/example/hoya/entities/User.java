@@ -12,9 +12,13 @@ import javax.persistence.*;
 @Setter
 public class User extends BaseEntity{
 
-    @Column(unique = true)
+    @Column(unique = true, nullable = false)
     private String username;
 
+    @Column(unique = true, nullable = false)
+    private String email;
+
+    @Column(nullable = false)
     private String password;
 
     @Enumerated(EnumType.ORDINAL)

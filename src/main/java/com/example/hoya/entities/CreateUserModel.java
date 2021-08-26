@@ -7,8 +7,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateUserModel {
+
     private String username;
     private String password;
     private Status status;
     private String role;
+    private String email;
 }
