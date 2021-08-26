@@ -26,7 +26,8 @@ public class UserServiceImpl implements UserService {
     private JwtUtil jwtUtil;
     @Autowired
     private TokenService tokenService;
-
+    @Autowired
+    private EmailServiceImpl emailService;
 
 
     @Override
@@ -47,12 +48,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Token createUser(CreateUserModel userModel) {
+    public String createUser(CreateUserModel userModel) {
         User user = new User();
         user.setUsername(userModel.getUsername());
         user.setPassword(userModel.getPassword());
+        user.setEmail(userModel.getEmail());
         user.setRole(roleService.findById(2L));
-        user.setStatus(Status.ACTIVE);
+        user.setStatus(Status.INACTIVE);
         userRepository.saveAndFlush(user);
         Token token = new Token();
         UserPrincipal userPrincipal = this.findByUsername(user.getUsername());
@@ -61,7 +63,10 @@ public class UserServiceImpl implements UserService {
         token.setTokenExpDate(localDateTime);
         token.setCreatedBy(user.getId());
         tokenService.createToken(token);
-        return token;
+        String link = "http://localhost:8080/confirm?token=" + token.getToken();
+        emailService.send(user.getEmail(), buildEmail(user.getUsername(),link));
+
+        return token.getToken();
     }
     @Override
     public boolean deleteUser(Long userID) {
@@ -82,4 +87,14 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
+    @Override
+    public User enableUser(String username) {
+        User user = userRepository.findUserByUsername(username);
+        user.setStatus(Status.ACTIVE);
+        return userRepository.save(user);
+    }
+
+    private String buildEmail(String name, String link) {
+        return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + " nhá,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Kích hoạt toài khoản đê: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Kích hoạt</a> </p></blockquote>\n<p>Tạm piệt</p>";
+    }
 }

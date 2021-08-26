@@ -9,10 +9,12 @@ public interface UserService {
 
     UserPrincipal findByUsername(String username);
 
-    Token createUser(CreateUserModel user);
+    String createUser(CreateUserModel user);
 
     boolean deleteUser(Long userID);
 
     User resetPassword(String username, String password);
+
+    User enableUser(String username);
 
 }

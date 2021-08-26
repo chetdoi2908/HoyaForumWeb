@@ -55,12 +55,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public CreateUserModel register(@RequestBody CreateUserModel user){
+    public String register(@RequestBody CreateUserModel user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(Status.ACTIVE);
+        user.setStatus(Status.INACTIVE);
         user.setRole("ROLE_USER");
-        userService.createUser(user);
-        return user;
+        String token = userService.createUser(user);
+        return token;
     }
 
     @GetMapping(path = "confirm")
