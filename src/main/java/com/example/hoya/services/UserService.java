@@ -11,12 +11,14 @@ public interface UserService {
 
     String createUser(CreateUserModel user);
 
-    boolean deleteUser(Long userID);
+    boolean deleteUser(Long userid);
 
     User resetPassword(String username, String password);
 
     User enableUser(String username);
 
     String sendEmailResetPassword(String email);
+
+    void resetPasswordUser(UserPrincipal user);
 
 }

@@ -69,9 +69,9 @@ public class UserController {
          return tokenService.confirmToken(token);
     }
 
-    @PutMapping("/delete/{userid}")
-    public HttpStatus delete(@PathVariable(name = "userid") Long userID){
-        if(userService.deleteUser(userID))
+    @DeleteMapping("/delete/{userid}")
+    public HttpStatus delete(@PathVariable(name = "userid") Long userid){
+        if(userService.deleteUser(userid))
         {
             return HttpStatus.OK;
         }else{
@@ -89,13 +89,22 @@ public class UserController {
     }
 
     @PostMapping("/reset")
-    public String resetPassword(@RequestParam String email){
+    public String sendResetPasswordEmail(@RequestParam String email){
         return userService.sendEmailResetPassword(email);
     }
-//    @GetMapping(path = "resetpassword")
-//    public String reset(@RequestParam("token") String token) {
-//
-//        return userService;
-//    }
+
+    @GetMapping(path = "resetpassword")
+    public User getTokenFromLink(@RequestParam("token") String token) {
+        User user = tokenService.getUserFromToken(token);
+        return user;
+    }
+
+    // Info FE để sẵn, chỉ cho user nhập password
+    @PostMapping("/resetpassword")
+    public HttpStatus resetPassword(@RequestBody UserPrincipal inputtedUser)
+    {
+        userService.resetPasswordUser(inputtedUser);
+        return HttpStatus.OK;
+    }
 
 }

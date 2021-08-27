@@ -58,4 +58,12 @@ public class TokenServiceImpl implements TokenService{
         return "Đã confirm thành công";
     }
 
+    @Override
+    public User getUserFromToken(String receivedToken) {
+        Token token = tokenRepository.findTokenByToken(receivedToken);
+        Long userID = token.getCreatedBy();
+        User user = userRepository.findById(userID).get();
+        return user;
+    }
+
 }

@@ -66,8 +66,8 @@ public class UserServiceImpl implements UserService {
         return token.getToken();
     }
     @Override
-    public boolean deleteUser(Long userID) {
-        User user = userRepository.findById(userID).get();
+    public boolean deleteUser(Long userid) {
+        User user = userRepository.findById(userid).get();
         if(user != null){
             user.setStatus(Status.INACTIVE);
             userRepository.save(user);
@@ -100,6 +100,13 @@ public class UserServiceImpl implements UserService {
         emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
 
         return link;
+    }
+
+    @Override
+    public void resetPasswordUser(UserPrincipal userPrincipal) {
+        User user = userRepository.getById(userPrincipal.getUserId());
+        user.setPassword(userPrincipal.getPassword());
+        userRepository.save(user);
     }
 
     private String buildCreateUserEmail(String name, String link) {

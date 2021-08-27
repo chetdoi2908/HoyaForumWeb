@@ -11,5 +11,5 @@ public interface TokenService {
 
     String confirmToken(String token);
 
-
+    User getUserFromToken(String token);
 }
