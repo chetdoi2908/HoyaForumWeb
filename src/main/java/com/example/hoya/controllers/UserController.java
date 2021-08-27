@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 @RestController
 public class UserController {
@@ -36,8 +38,6 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    @Autowired
-    private RoleService roleService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user){
@@ -47,20 +47,26 @@ public class UserController {
         }
         Token token = new Token();
         token.setToken(jwtUtil.generateToken(userPrincipal));
-        token.setTokenExpDate(jwtUtil.generateExpirationDate());
+        LocalDateTime localDateTime = LocalDateTime.ofInstant(jwtUtil.generateExpirationDate().toInstant(), ZoneId.systemDefault());
+        token.setTokenExpDate(localDateTime);
         token.setCreatedBy(userPrincipal.getUserId());
         tokenService.createToken(token);
-        System.out.println(jwtUtil.generateToken(userPrincipal));
         return ResponseEntity.ok(token.getToken());
     }
 
     @PostMapping("/register")
-    public CreateUserModel register(@RequestBody CreateUserModel user){
+    public String register(@RequestBody CreateUserModel user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(Status.ACTIVE);
+        user.setStatus(Status.INACTIVE);
         user.setRole("ROLE_USER");
-        userService.createUser(user);
-        return user;
+        String token = userService.createUser(user);
+        return token;
+    }
+
+    @GetMapping(path = "confirm")
+    public String confirm(@RequestParam("token") String token) {
+
+         return tokenService.confirmToken(token);
     }
 
     @PutMapping("/delete/{userid}")
@@ -82,6 +88,10 @@ public class UserController {
         return "redirect:/";
     }
 
-
+    @PostMapping("/resetpassword")
+    public String resetPassword(@RequestBody User user){
+        userService.resetPassword(user.getUsername(), user.getPassword());
+        return "redirect:/";
+    }
 
 }
