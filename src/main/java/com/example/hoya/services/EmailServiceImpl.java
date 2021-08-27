@@ -26,7 +26,6 @@ public class EmailServiceImpl implements EmailService{
             helper.setSubject("Confirm your email");
             helper.setFrom("onedirection19991999@gmail.com");
             mailSender.send(mimeMessage);
-            System.out.println("đã gửi email");
         }catch (MessagingException e){
             System.out.println("gửi mail sai r");
         }

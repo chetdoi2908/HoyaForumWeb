@@ -1,5 +1,6 @@
 package com.example.hoya.utils;
 
+import com.example.hoya.entities.User;
 import com.example.hoya.entities.UserPrincipal;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
@@ -18,7 +19,7 @@ public class JwtUtil {
     private static final String USER = "user";
     private static final String SECRET = "daycaidaynaychinhlachukycuabandungdelorangoaidaynhenguyhiemchetnguoidayhihihi";
 
-    public String generateToken(UserPrincipal user){
+    public String generateToken(User user){
         String token = null;
         try {
             JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
