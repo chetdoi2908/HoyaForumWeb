@@ -17,4 +17,6 @@ public interface UserService {
 
     User enableUser(String username);
 
+    String sendEmailResetPassword(String email);
+
 }

@@ -2,6 +2,7 @@ package com.example.hoya.services;
 
 import com.example.hoya.entities.*;
 import com.example.hoya.enums.Status;
+import com.example.hoya.repositories.TokenRepository;
 import com.example.hoya.repositories.UserRepository;
 import com.example.hoya.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    TokenRepository tokenRepository;
     @Autowired
     RoleService roleService;
     @Autowired
@@ -56,15 +59,9 @@ public class UserServiceImpl implements UserService {
         user.setRole(roleService.findById(2L));
         user.setStatus(Status.INACTIVE);
         userRepository.saveAndFlush(user);
-        Token token = new Token();
-        UserPrincipal userPrincipal = this.findByUsername(user.getUsername());
-        token.setToken(jwtUtil.generateToken(userPrincipal));
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(jwtUtil.generateExpirationDate().toInstant(), ZoneId.systemDefault());
-        token.setTokenExpDate(localDateTime);
-        token.setCreatedBy(user.getId());
-        tokenService.createToken(token);
+        Token token = tokenService.createToken(user);
         String link = "http://localhost:8080/confirm?token=" + token.getToken();
-        emailService.send(user.getEmail(), buildEmail(user.getUsername(),link));
+        emailService.send(user.getEmail(), buildCreateUserEmail(user.getUsername(),link));
 
         return token.getToken();
     }
@@ -81,8 +78,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User resetPassword(String username, String password) {
-        User user = userRepository.findUserByUsernameAndStatus(username, Status.ACTIVE);
+    public User resetPassword(String token, String password) {
+        Token token1 = tokenRepository.findTokenByToken(token);
+        User user = userRepository.findById(token1.getCreatedBy()).get();
         user.setPassword(passwordEncoder.encode(password));
         return userRepository.save(user);
     }
@@ -94,7 +92,20 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    private String buildEmail(String name, String link) {
+    @Override
+    public String sendEmailResetPassword(String email) {
+        User user = userRepository.findUserByEmail(email);
+        Token token = tokenService.createToken(user);
+        String link = "http://localhost:8080/reset?token=" + token.getToken();
+        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
+
+        return link;
+    }
+
+    private String buildCreateUserEmail(String name, String link) {
         return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + " nhá,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Kích hoạt toài khoản đê: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Kích hoạt</a> </p></blockquote>\n<p>Tạm piệt</p>";
+    }
+    private String buildResetPasswordEmail(String name, String link) {
+        return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + " nhá,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Tạo lại mật khẩu đê: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Tạo lại mật khẩu</a> </p></blockquote>\n<p>Tạm piệt</p>";
     }
 }

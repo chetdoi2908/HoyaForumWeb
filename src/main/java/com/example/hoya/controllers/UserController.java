@@ -46,11 +46,11 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("tài khoản hoặc mật khẩu không chính xác");
         }
         Token token = new Token();
-        token.setToken(jwtUtil.generateToken(userPrincipal));
+        token.setToken(jwtUtil.generateToken(user));
         LocalDateTime localDateTime = LocalDateTime.ofInstant(jwtUtil.generateExpirationDate().toInstant(), ZoneId.systemDefault());
         token.setTokenExpDate(localDateTime);
         token.setCreatedBy(userPrincipal.getUserId());
-        tokenService.createToken(token);
+        tokenService.createToken(user);
         return ResponseEntity.ok(token.getToken());
     }
 
@@ -88,10 +88,14 @@ public class UserController {
         return "redirect:/";
     }
 
-    @PostMapping("/resetpassword")
-    public String resetPassword(@RequestBody User user){
-        userService.resetPassword(user.getUsername(), user.getPassword());
-        return "redirect:/";
+    @PostMapping("/reset")
+    public String resetPassword(@RequestParam String email){
+        return userService.sendEmailResetPassword(email);
     }
+//    @GetMapping(path = "resetpassword")
+//    public String reset(@RequestParam("token") String token) {
+//
+//        return userService;
+//    }
 
 }
