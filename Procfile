@@ -1,1 +1,1 @@
-web: java -jar target/Hoya.jar
+web: java -jar Hoya.jar
