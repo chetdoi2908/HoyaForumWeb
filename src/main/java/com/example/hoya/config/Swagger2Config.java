@@ -26,7 +26,7 @@ public class Swagger2Config {
 
     private ApiInfo apiEndPointsInfo() {
         return new ApiInfoBuilder().title("Spring Boot REST API")
-                .description("Employee Management REST API")
+                .description("HoyaPlant Forum REST API")
                 .contact(new Contact("Hoya", "https://hoyaplant.herokuapp.com/", "onedirection19991999@gmail.com"))
                 .license("Apache 2.0")
                 .licenseUrl("http://www.apache.org/licenses/LICENSE-2.0.html")
