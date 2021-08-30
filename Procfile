@@ -1,1 +1,1 @@
-web: java -jar target/Hoya.jar
+web: java -jar target/java-getting-started-1.0.jar
