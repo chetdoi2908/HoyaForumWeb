@@ -2,15 +2,12 @@ package com.example.hoya.services;
 
 import com.example.hoya.entities.*;
 import com.example.hoya.enums.Status;
-import com.example.hoya.repositories.TokenRepository;
 import com.example.hoya.repositories.UserRepository;
 import com.example.hoya.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +17,11 @@ public class UserServiceImpl implements UserService {
     @Autowired
     UserRepository userRepository;
     @Autowired
-    TokenRepository tokenRepository;
-    @Autowired
     RoleService roleService;
     @Autowired
     PasswordEncoder passwordEncoder;
     @Autowired
     private JwtUtil jwtUtil;
-    @Autowired
-    private TokenService tokenService;
     @Autowired
     private EmailServiceImpl emailService;
 
@@ -59,11 +52,11 @@ public class UserServiceImpl implements UserService {
         user.setRole(roleService.findById(2L));
         user.setStatus(Status.INACTIVE);
         userRepository.saveAndFlush(user);
-        Token token = tokenService.createToken(user);
-        String link = "http://hoyaplant.herokuapp.com/confirm?token=" + token.getToken();
+        String token = jwtUtil.generateToken(user);
+        String link = "http://localhost:8080/confirm?token=" + token;
         emailService.send(user.getEmail(), buildCreateUserEmail(user.getUsername(),link));
 
-        return token.getToken();
+        return token;
     }
     @Override
     public boolean deleteUser(Long userid) {
@@ -79,27 +72,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User resetPassword(String token, String password) {
-        Token token1 = tokenRepository.findTokenByToken(token);
-        User user = userRepository.findById(token1.getCreatedBy()).get();
-        user.setPassword(passwordEncoder.encode(password));
-        return userRepository.save(user);
+//        Token token1 = tokenRepository.findTokenByToken(token);
+//        User user = userRepository.findById(token1.getCreatedBy()).get();
+//        user.setPassword(passwordEncoder.encode(password));
+        return null;
     }
 
     @Override
-    public User enableUser(String username) {
-        User user = userRepository.findUserByUsername(username);
+    public String enableUser(String token) {
+        User user = userRepository.findById(jwtUtil.getUserIdFromJWT(token)).get();
         user.setStatus(Status.ACTIVE);
-        return userRepository.save(user);
+        userRepository.save(user);
+        return "Confirm thành công";
     }
 
     @Override
     public String sendEmailResetPassword(String email) {
-        User user = userRepository.findUserByEmail(email);
-        Token token = tokenService.createToken(user);
-        String link = "https://hoyaplant.herokuapp.com/reset?token=" + token.getToken();
-        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
+//        User user = userRepository.findUserByEmail(email);
+//        Token token = tokenService.createToken(user);
+//        String link = "https://localhost:8080/reset?token=" + token.getToken();
+//        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
 
-        return link;
+        return null;
     }
 
     @Override
@@ -107,6 +101,16 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getById(userPrincipal.getUserId());
         user.setPassword(userPrincipal.getPassword());
         userRepository.save(user);
+    }
+
+    @Override
+    public UserPrincipal findById(Long id) {
+        User user = userRepository.findById(id).get();
+        UserPrincipal userPrincipal = new UserPrincipal();
+        userPrincipal.setUserId(user.getId());
+        userPrincipal.setUsername(user.getUsername());
+        userPrincipal.setEmail(user.getEmail());
+        return userPrincipal;
     }
 
     private String buildCreateUserEmail(String name, String link) {

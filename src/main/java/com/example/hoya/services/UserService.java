@@ -1,7 +1,6 @@
 package com.example.hoya.services;
 
 import com.example.hoya.entities.CreateUserModel;
-import com.example.hoya.entities.Token;
 import com.example.hoya.entities.User;
 import com.example.hoya.entities.UserPrincipal;
 
@@ -15,10 +14,12 @@ public interface UserService {
 
     User resetPassword(String username, String password);
 
-    User enableUser(String username);
+    String enableUser(String token);
 
     String sendEmailResetPassword(String email);
 
     void resetPasswordUser(UserPrincipal user);
+
+    UserPrincipal findById(Long id);
 
 }
