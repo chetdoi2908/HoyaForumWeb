@@ -18,6 +18,7 @@ public class Topic extends BaseEntity{
     @Enumerated(EnumType.ORDINAL)
     private Status isActive;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Topic> topics;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 }

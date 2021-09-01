@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
         user.setStatus(Status.INACTIVE);
         userRepository.saveAndFlush(user);
         Token token = tokenService.createToken(user);
-        String link = "http://localhost:8080/confirm?token=" + token.getToken();
+        String link = "http://hoyaplant.herokuapp.com/confirm?token=" + token.getToken();
         emailService.send(user.getEmail(), buildCreateUserEmail(user.getUsername(),link));
 
         return token.getToken();
@@ -96,7 +96,7 @@ public class UserServiceImpl implements UserService {
     public String sendEmailResetPassword(String email) {
         User user = userRepository.findUserByEmail(email);
         Token token = tokenService.createToken(user);
-        String link = "http://localhost:8080/reset?token=" + token.getToken();
+        String link = "https://hoyaplant.herokuapp.com/reset?token=" + token.getToken();
         emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
 
         return link;
