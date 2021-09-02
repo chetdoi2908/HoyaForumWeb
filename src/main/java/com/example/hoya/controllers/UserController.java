@@ -2,9 +2,6 @@ package com.example.hoya.controllers;
 
 import com.example.hoya.entities.*;
 import com.example.hoya.enums.Status;
-import com.example.hoya.repositories.RoleRepository;
-import com.example.hoya.services.RoleService;
-import com.example.hoya.services.TokenService;
 import com.example.hoya.services.UserService;
 import com.example.hoya.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +16,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.security.Principal;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 @RestController
 public class UserController {
@@ -32,8 +26,6 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private TokenService tokenService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -45,13 +37,8 @@ public class UserController {
         if(user == null || !new BCryptPasswordEncoder().matches(user.getPassword(), userPrincipal.getPassword())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("tài khoản hoặc mật khẩu không chính xác");
         }
-        Token token = new Token();
-        token.setToken(jwtUtil.generateToken(user));
-        LocalDateTime localDateTime = LocalDateTime.ofInstant(jwtUtil.generateExpirationDate().toInstant(), ZoneId.systemDefault());
-        token.setTokenExpDate(localDateTime);
-        token.setCreatedBy(userPrincipal.getUserId());
-        tokenService.createToken(user);
-        return ResponseEntity.ok(token.getToken());
+        String token = jwtUtil.generateToken(user);
+        return ResponseEntity.ok(token);
     }
 
     @PostMapping("/register")
@@ -66,7 +53,7 @@ public class UserController {
     @GetMapping(path = "confirm")
     public String confirm(@RequestParam("token") String token) {
 
-         return tokenService.confirmToken(token);
+         return userService.enableUser(token);
     }
 
     @DeleteMapping("/delete/{userid}")
@@ -95,8 +82,8 @@ public class UserController {
 
     @GetMapping(path = "resetpassword")
     public User getTokenFromLink(@RequestParam("token") String token) {
-        User user = tokenService.getUserFromToken(token);
-        return user;
+//        User user = tokenService.getUserFromToken(token);
+        return null;
     }
 
     // Info FE để sẵn, chỉ cho user nhập password
@@ -106,5 +93,7 @@ public class UserController {
         userService.resetPasswordUser(inputtedUser);
         return HttpStatus.OK;
     }
+
+
 
 }

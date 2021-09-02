@@ -1,42 +1,56 @@
 package com.example.hoya.utils;
 
 import com.example.hoya.entities.User;
-import com.example.hoya.entities.UserPrincipal;
-import com.nimbusds.jose.JWSAlgorithm;
-import com.nimbusds.jose.JWSHeader;
-import com.nimbusds.jose.JWSSigner;
-import com.nimbusds.jose.crypto.MACSigner;
-import com.nimbusds.jwt.JWTClaimsSet;
-import com.nimbusds.jwt.SignedJWT;
+import io.jsonwebtoken.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Component
+@Slf4j
 public class JwtUtil {
 
-    private static final String USER = "user";
-    private static final String SECRET = "daycaidaynaychinhlachukycuabandungdelorangoaidaynhenguyhiemchetnguoidayhihihi";
+    // Đoạn JWT_SECRET này là bí mật, chỉ có phía server biết
+    private final String JWT_SECRET = "provip123";
 
-    public String generateToken(User user){
-        String token = null;
-        try {
-            JWTClaimsSet.Builder builder = new JWTClaimsSet.Builder();
-            builder.claim(USER, user);
-            builder.expirationTime(generateExpirationDate());
-            JWTClaimsSet claimsSet = builder.build();
-            SignedJWT signedJWT = new SignedJWT(new JWSHeader(JWSAlgorithm.HS256), claimsSet);
-            JWSSigner signer = new MACSigner(SECRET.getBytes());
-            signedJWT.sign(signer);
-            token = signedJWT.serialize();
-        }catch (Exception e){
-            System.out.println(e);
-        }
-        return token;
+    //Thời gian có hiệu lực của chuỗi jwt
+    private final long JWT_EXPIRATION = 1800000L;
+
+    // Tạo ra jwt từ thông tin user
+    public String generateToken(User user) {
+        Date now = new Date();
+        Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
+        // Tạo chuỗi json web token từ id của user.
+        return Jwts.builder()
+                .setSubject(Long.toString(user.getId()))
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .signWith(SignatureAlgorithm.HS512, JWT_SECRET)
+                .compact();
     }
-    public Date generateExpirationDate() {
-        return new Date(System.currentTimeMillis() + 1800000);
+    public Long getUserIdFromJWT(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(JWT_SECRET)
+                .parseClaimsJws(token)
+                .getBody();
+
+        return Long.parseLong(claims.getSubject());
+    }
+
+    public boolean validateToken(String authToken) {
+        try {
+            Jwts.parser().setSigningKey(JWT_SECRET).parseClaimsJws(authToken);
+            return true;
+        } catch (MalformedJwtException ex) {
+            log.error("Invalid JWT token");
+        } catch (ExpiredJwtException ex) {
+            log.error("Expired JWT token");
+        } catch (UnsupportedJwtException ex) {
+            log.error("Unsupported JWT token");
+        } catch (IllegalArgumentException ex) {
+            log.error("JWT claims string is empty.");
+        }
+        return false;
     }
 
 }
