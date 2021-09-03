@@ -36,6 +36,7 @@ public class UserController {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
     private OtpService otpService;
 
 
@@ -85,18 +86,11 @@ public class UserController {
 
     @PostMapping("/sendResetPasswordEmail")
     public ResponseEntity<Object> sendResetPasswordEmail(@RequestParam("email") String email) throws MessagingException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
 
         Map<String, String> response = new HashMap<>(2);
 
-        // check authentication
-        if (username == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
         // generate OTP.
-        Boolean isGenerated = otpService.generateOtp(username);
+        Boolean isGenerated = otpService.generateOtp(email);
         if (!isGenerated)
         {
             response.put("status", "error");
@@ -120,35 +114,20 @@ public class UserController {
         userService.resetPasswordUser(inputtedUser);
         return HttpStatus.OK;
     }
-
-    @PostMapping(value = "/validate", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> validateOTP(@RequestBody Map<String, Object> otp)
+    @PostMapping("/validate")
+    public HttpStatus validateOTP(@RequestParam(name = "email") String email,@RequestParam(name = "otp") Integer otp)
     {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
+        System.out.println(email);
+        System.out.println(otp);
 
-        Map<String, String> response = new HashMap<>(2);
-
-        // check authentication
-        if (username == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-
-        // validate provided OTP.
-        Boolean isValid = otpService.validateOTP(username, (Integer) otp.get("otp"));
+        // validate provided OTP. nhu nay ha
+        Boolean isValid = otpService.validateOTP(email, otp);
         if (!isValid)
         {
-            response.put("status", "error");
-            response.put("message", "OTP is not valid!");
-
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+            return HttpStatus.BAD_REQUEST;
         }
 
-        // success message
-        response.put("status", "success");
-        response.put("message", "Entered OTP is valid!");
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        return HttpStatus.OK;
     }
 
 

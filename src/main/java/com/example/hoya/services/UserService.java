@@ -8,6 +8,8 @@ public interface UserService {
 
     UserPrincipal findByUsername(String username);
 
+    User findByEmail(String email);
+
     String createUser(CreateUserModel user);
 
     boolean deleteUser(Long userid);

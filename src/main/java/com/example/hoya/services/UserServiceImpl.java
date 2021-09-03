@@ -43,6 +43,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User findByEmail(String email) {
+        User user = userRepository.findUserByEmail(email); // chỗ này nó tìm ko dc thì phải cíu t :v
+        return user;
+    }
+
+    @Override
     public String createUser(CreateUserModel userModel) {
         User user = new User();
         user.setUsername(userModel.getUsername());
@@ -91,7 +97,7 @@ public class UserServiceImpl implements UserService {
         userPrincipal.setUserId(user.getId());
         userPrincipal.setUsername(user.getUsername());
         userPrincipal.setEmail(user.getEmail());
-        // ab
+        // ab này mới nhất r phài ko ừ
         return userPrincipal;
     }
 
