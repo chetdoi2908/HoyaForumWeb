@@ -1,13 +1,16 @@
 package com.example.hoya.services;
 
+import org.springframework.stereotype.Service;
+import com.google.common.cache.LoadingCache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
+@Service
 public class OtpGenerator {
+
     private static final Integer EXPIRE_MIN = 5;
     private LoadingCache<String, Integer> otpCache;
 
