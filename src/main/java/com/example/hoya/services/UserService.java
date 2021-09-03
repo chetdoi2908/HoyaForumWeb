@@ -12,11 +12,7 @@ public interface UserService {
 
     boolean deleteUser(Long userid);
 
-    User resetPassword(String username, String password);
-
     String enableUser(String token);
-
-    String sendEmailResetPassword(String email);
 
     void resetPasswordUser(UserPrincipal user);
 

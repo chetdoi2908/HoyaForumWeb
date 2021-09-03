@@ -71,27 +71,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User resetPassword(String token, String password) {
-//        Token token1 = tokenRepository.findTokenByToken(token);
-//        User user = userRepository.findById(token1.getCreatedBy()).get();
-//        user.setPassword(passwordEncoder.encode(password));
-        return null;
-    }
-
-    @Override
     public String enableUser(String token) {
         User user = userRepository.findById(jwtUtil.getUserIdFromJWT(token)).get();
         user.setStatus(Status.ACTIVE);
         userRepository.save(user);
         return "Confirm thành công";
-    }
-
-    @Override
-    public String sendEmailResetPassword(String email) {
-        User user = userRepository.findUserByEmail(email);
-        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
-
-        return null;
     }
 
     @Override
@@ -113,8 +97,5 @@ public class UserServiceImpl implements UserService {
 
     private String buildCreateUserEmail(String name, String link) {
         return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + " nhá,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Kích hoạt toài khoản đê: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Kích hoạt</a> </p></blockquote>\n<p>Tạm piệt</p>";
-    }
-    private String buildResetPasswordEmail(String name, String link) {
-        return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + " nhá,</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Tạo lại mật khẩu đê: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Tạo lại mật khẩu</a> </p></blockquote>\n<p>Tạm piệt</p>";
     }
 }
