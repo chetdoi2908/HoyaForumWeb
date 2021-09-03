@@ -117,9 +117,6 @@ public class UserController {
     @PostMapping("/validate")
     public HttpStatus validateOTP(@RequestParam(name = "email") String email,@RequestParam(name = "otp") Integer otp)
     {
-        System.out.println(email);
-        System.out.println(otp);
-
         // validate provided OTP. nhu nay ha
         Boolean isValid = otpService.validateOTP(email, otp);
         if (!isValid)

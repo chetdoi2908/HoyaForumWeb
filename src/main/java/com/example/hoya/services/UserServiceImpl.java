@@ -58,8 +58,8 @@ public class UserServiceImpl implements UserService {
         user.setStatus(Status.INACTIVE);
         userRepository.saveAndFlush(user);
         String token = jwtUtil.generateToken(user);
-        String link = "http://localhost:8080/confirm?token=" + token;
-        emailService.send(user.getEmail(), buildCreateUserEmail(user.getUsername(),link));
+        String link = "http://localhost:8080/user/confirm?token=" + token;
+        emailService.send(user.getEmail(), buildCreateUserEmail(user.getUsername(),link), "Tạo tài khoản");
 
         return token;
     }
@@ -97,11 +97,10 @@ public class UserServiceImpl implements UserService {
         userPrincipal.setUserId(user.getId());
         userPrincipal.setUsername(user.getUsername());
         userPrincipal.setEmail(user.getEmail());
-        // ab này mới nhất r phài ko ừ
         return userPrincipal;
     }
 
     private String buildCreateUserEmail(String name, String link) {
-        return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Xin vui lòng bấm vào đường link bên dưới để kích hoạt tài khoản: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Kích hoạt</a> </p></blockquote>\n<p>Cảm ơn</p>";
+        return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Xin vui lòng bấm vào đường link bên dưới để kích hoạt tài khoản: </p><p><a href=\"" + link + "\">Kích hoạt</a></p><p>Cảm ơn</p>";
     }
 }

@@ -17,13 +17,13 @@ public class EmailServiceImpl implements EmailService{
 
     @Override
     @Async
-    public void send(String to, String email) {
+    public void send(String to, String email, String subject) {
         try {
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
             helper.setText(email, true);
             helper.setTo(to);
-            helper.setSubject("Confirm your email");
+            helper.setSubject(subject);
             helper.setFrom("onedirection19991999@gmail.com");
             mailSender.send(mimeMessage);
         }catch (MessagingException e){

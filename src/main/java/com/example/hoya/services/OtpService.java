@@ -21,24 +21,9 @@ public class OtpService {
     private UserService userService;
     private JavaMailSender mailSender;
 
-    /**
-     * Constructor dependency injector
-     * @param otpGenerator - otpGenerator dependency
-     * @param emailService - email service dependency
-     * @param userService - user service dependency
-     */
-
-
-
-    /**
-     * Method for generate OTP number
-     *
-     * @param key - provided key (username in this case)
-     * @return boolean value (true|false)
-     */
-    public Boolean generateOtp(String key) throws MessagingException {
+    public Boolean generateOtp(String email) throws MessagingException {
         // generate otp
-        Integer otpValue = otpGenerator.generateOTP(key);
+        Integer otpValue = otpGenerator.generateOTP(email);
         System.out.println(otpValue);
         if (otpValue == -1)
         {
@@ -46,15 +31,8 @@ public class OtpService {
         }
 
         // fetch user e-mail from database
-        User user = userService.findByEmail(key);
         // generate emailDTO object
-        MimeMessage mimeMessage = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setText("OTP Password: " + otpValue, true);
-        helper.setSubject("Spring Boot OTP Password.");
-        helper.setTo(user.getEmail());
-        mailSender.send(mimeMessage);
-
+        emailService.send(email, "Đây là mã OTP: " + otpValue, "Lấy lại mật khẩu");
         // send generated e-mail
         return true;
     }
@@ -69,10 +47,7 @@ public class OtpService {
     public Boolean validateOTP(String key, Integer otpNumber)
     {
         // get OTP from cache
-        System.out.println("key" + key);
-        System.out.println("otpNumber" + otpNumber);
         Integer cacheOTP = otpGenerator.getOPTByKey(key);
-        System.out.println("cacheotp" + cacheOTP);
         if (cacheOTP!=null && cacheOTP.equals(otpNumber))
         {
             otpGenerator.clearOTPFromCache(key);
