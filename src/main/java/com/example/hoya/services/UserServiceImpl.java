@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -41,6 +40,12 @@ public class UserServiceImpl implements UserService {
             userPrincipal.setAuthorities(authorities);
         }
         return userPrincipal;
+    }
+
+    @Override
+    public User findByEmail(String email) {
+        User user = userRepository.findUserByEmail(email); // chỗ này nó tìm ko dc thì phải cíu t :v
+        return user;
     }
 
     @Override
@@ -92,6 +97,7 @@ public class UserServiceImpl implements UserService {
         userPrincipal.setUserId(user.getId());
         userPrincipal.setUsername(user.getUsername());
         userPrincipal.setEmail(user.getEmail());
+        // ab này mới nhất r phài ko ừ
         return userPrincipal;
     }
 

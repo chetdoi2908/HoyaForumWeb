@@ -1,6 +1,7 @@
 package com.example.hoya.utils;
 
 import com.example.hoya.entities.User;
+import com.example.hoya.entities.User;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
