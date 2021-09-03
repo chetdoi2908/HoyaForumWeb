@@ -13,7 +13,6 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
-
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -92,6 +91,7 @@ public class UserServiceImpl implements UserService {
         userPrincipal.setUserId(user.getId());
         userPrincipal.setUsername(user.getUsername());
         userPrincipal.setEmail(user.getEmail());
+        // a
         return userPrincipal;
     }
 
