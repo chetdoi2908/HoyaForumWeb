@@ -88,10 +88,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String sendEmailResetPassword(String email) {
-//        User user = userRepository.findUserByEmail(email);
-//        Token token = tokenService.createToken(user);
-//        String link = "https://localhost:8080/reset?token=" + token.getToken();
-//        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
+        User user = userRepository.findUserByEmail(email);
+        emailService.send(user.getEmail(), buildResetPasswordEmail(user.getUsername(),link));
 
         return null;
     }
