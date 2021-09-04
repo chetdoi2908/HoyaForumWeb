@@ -62,16 +62,16 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody CreateUserModel user){
+    public ResponseEntity<?> register(@RequestBody CreateUserModel user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         String token = userService.createUser(user);
-        return token;
+        return ResponseEntity.ok(token);
     }
 
     @GetMapping(path = "confirm")
-    public String confirm(@RequestParam("token") String token) {
+    public ResponseEntity<?> confirm(@RequestParam("token") String token) {
 
-         return userService.enableUser(token);
+         return ResponseEntity.ok(userService.enableUser(token));
     }
 
     @DeleteMapping("/delete/{userid}")
@@ -103,14 +103,14 @@ public class UserController {
         if (!isGenerated)
         {
             response.put("status", "error");
-            response.put("message", "OTP can not be generated.");
+            response.put("message", "Không thể khởi tạo OTP.");
 
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
         // success message
         response.put("status", "success");
-        response.put("message", "OTP successfully generated. Please check your e-mail!");
+        response.put("message", "Đã gửi mã otp, xin vui lòng kiểm tra email.");
 
 //        userService.sendEmailResetPassword(email, isGenerated);
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -118,22 +118,22 @@ public class UserController {
 
     // Info FE để sẵn, chỉ cho user nhập password
     @PostMapping("/resetpassword")
-    public HttpStatus resetPassword(@RequestBody String email, @RequestBody String password)
+    public ResponseEntity<Object> resetPassword(@RequestBody UserResetPasswordModel userResetPasswordModel)
     {
-               userService.resetPasswordUser(email, passwordEncoder.encode(password));
-               return HttpStatus.OK;
+               userService.resetPasswordUser(userResetPasswordModel.getEmail(), passwordEncoder.encode(userResetPasswordModel.getPassword()));
+               return new ResponseEntity<>("Đổi mật khẩu thành công", HttpStatus.OK);
     }
     @PostMapping("/validate")
-    public String validateOTP(@RequestBody String email,@RequestBody Integer otp)
+    public ResponseEntity<Object> validateOTP(@RequestBody UserResetPasswordModel userResetPasswordModel)
     {
         // validate provided OTP.
-        Boolean isValid = otpService.validateOTP(email, otp);
+        Boolean isValid = otpService.validateOTP(userResetPasswordModel.getEmail(), userResetPasswordModel.getOtp());
         if (!isValid)
         {
-            return "OTP not valid!";
+            return new ResponseEntity<>("OTP không chính xác", HttpStatus.BAD_REQUEST);
         }
 
-        return email;
+        return ResponseEntity.ok(userResetPasswordModel.getEmail());
     }
 
 
