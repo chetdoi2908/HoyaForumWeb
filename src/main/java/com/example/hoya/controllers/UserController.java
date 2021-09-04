@@ -118,9 +118,9 @@ public class UserController {
 
     // Info FE để sẵn, chỉ cho user nhập password
     @PostMapping("/resetpassword")
-    public HttpStatus resetPassword(@RequestParam(name = "email") String email)
+    public HttpStatus resetPassword(@RequestParam(name = "email") String email,@RequestParam(name = "new password") String password)
     {
-        userService.resetPasswordUser(email);
+        userService.resetPasswordUser(email,password);
         return HttpStatus.OK;
     }
     @PostMapping("/validate")
