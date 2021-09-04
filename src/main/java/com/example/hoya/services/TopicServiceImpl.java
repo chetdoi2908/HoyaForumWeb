@@ -9,18 +9,18 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public abstract class TopicSeriveImpl implements TopicService{
+public class TopicServiceImpl implements TopicService{
 
     @Autowired
     TopicRepository topicRepository;
 
     @Override
-    public boolean createTopicWithName(Topic inputtedTopic) {
+    public Topic createTopicWithName(String inputtedTopic) {
         Topic topic = new Topic();
-        topic.setName(inputtedTopic.getName());
+        topic.setName(inputtedTopic);
         topic.setIsActive(Status.ACTIVE);
         topicRepository.saveAndFlush(topic);
-        return true;
+        return topic;
     }
 
     @Override
@@ -30,4 +30,12 @@ public abstract class TopicSeriveImpl implements TopicService{
         topicRepository.saveAndFlush(result);
         return true;
     }
+
+
+    @Override
+    public List<Topic> findAllByStatus() {
+        List<Topic> topic = topicRepository.findByIsActive(Status.ACTIVE);
+        return topic;
+    }
+
 }

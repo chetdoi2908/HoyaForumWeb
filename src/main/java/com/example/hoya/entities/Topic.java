@@ -11,11 +11,9 @@ import java.util.List;
 @Getter
 @Setter
 public class Topic extends BaseEntity{
-    @Column(nullable = false)
+
     private String name;
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.ORDINAL)
     private Status isActive;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)

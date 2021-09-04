@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -17,10 +16,10 @@ public class TopicController {
     TopicService topicService;
 
     @PostMapping("/createTopicWithName")
-    public HttpStatus createTopicWithName(@RequestBody Topic topic){
+    public HttpStatus createTopicWithName(@RequestBody String topic){
 
-        boolean result = topicService.createTopicWithName(topic);
-        if(result){
+        Topic result = topicService.createTopicWithName(topic);
+        if(result!=null){
             return HttpStatus.OK;
         }
         return HttpStatus.BAD_REQUEST;
@@ -37,8 +36,8 @@ public class TopicController {
 
     @GetMapping(value = "/getAllTopic")
     public @ResponseBody List<Topic> getAllTopic() {
-        List<Topic> list = topicService.findByIsActive();
-        return list;
+        List<Topic> topic = topicService.findAllByStatus();
+        return topic;
     }
 
 }
