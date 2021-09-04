@@ -6,8 +6,10 @@ import com.example.hoya.repositories.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class TopicSeriveImpl implements TopicService{
+public abstract class TopicSeriveImpl implements TopicService{
 
     @Autowired
     TopicRepository topicRepository;

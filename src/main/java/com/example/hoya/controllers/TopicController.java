@@ -6,6 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @RestController
 @RequestMapping("/topic")
 public class TopicController {
@@ -30,6 +33,12 @@ public class TopicController {
             return HttpStatus.OK;
         }
         return HttpStatus.BAD_REQUEST;
+    }
+
+    @GetMapping(value = "/getAllTopic")
+    public @ResponseBody List<Topic> getAllTopic() {
+        List<Topic> list = topicService.findByIsActive();
+        return list;
     }
 
 }

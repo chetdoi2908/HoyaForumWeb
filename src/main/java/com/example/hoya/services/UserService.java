@@ -16,7 +16,7 @@ public interface UserService {
 
     String enableUser(String token);
 
-    void resetPasswordUser(UserPrincipal user);
+    void resetPasswordUser(String email);
 
     UserPrincipal findById(Long id);
 
