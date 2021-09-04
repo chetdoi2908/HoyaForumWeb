@@ -27,7 +27,7 @@ public class JwtUtil {
     public String generateToken(User user) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + JWT_EXPIRATION);
-        Long userID = userService.findByUsername(user.getUsername()).getUserId();
+        Long userID = user.getId();
         // Tạo chuỗi json web token từ id của user.
         return Jwts.builder()
                 .setSubject(Long.toString(userID))
