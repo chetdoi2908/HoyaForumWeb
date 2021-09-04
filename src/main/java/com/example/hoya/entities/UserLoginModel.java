@@ -1,14 +1,13 @@
 package com.example.hoya.entities;
 
-import com.example.hoya.enums.Status;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter
 @Setter
-public class CreateUserModel {
-
+@Getter
+@AllArgsConstructor
+public class UserLoginModel {
     private String username;
     private String password;
-    private String email;
 }

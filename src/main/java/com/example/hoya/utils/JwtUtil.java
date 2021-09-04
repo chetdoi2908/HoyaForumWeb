@@ -2,6 +2,7 @@ package com.example.hoya.utils;
 
 import com.example.hoya.entities.User;
 import com.example.hoya.entities.User;
+import com.example.hoya.entities.UserPrincipal;
 import com.example.hoya.services.UserService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;

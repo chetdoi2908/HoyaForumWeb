@@ -41,20 +41,21 @@ public class UserController {
 
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody User user){
+    public ResponseEntity<?> login(@RequestBody UserLoginModel user){
         UserPrincipal userPrincipal = userService.findByUsername(user.getUsername());
+        User user1 = new User();
+        user1.setUsername(user.getUsername());
+        user1.setPassword(user.getPassword());
         if(user == null || !new BCryptPasswordEncoder().matches(user.getPassword(), userPrincipal.getPassword())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("tài khoản hoặc mật khẩu không chính xác");
         }
-        String token = jwtUtil.generateToken(user);
+        String token = jwtUtil.generateToken(user1);
         return ResponseEntity.ok(token);
     }
 
     @PostMapping("/register")
     public String register(@RequestBody CreateUserModel user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setStatus(Status.INACTIVE);
-        user.setRole("ROLE_USER");
         String token = userService.createUser(user);
         return token;
     }
