@@ -118,10 +118,10 @@ public class UserController {
 
     // Info FE để sẵn, chỉ cho user nhập password
     @PostMapping("/resetpassword")
-    public HttpStatus resetPassword(@RequestParam String email)
+    public HttpStatus resetPassword(@RequestBody String email, @RequestBody String password)
     {
-        userService.resetPasswordUser(email);
-        return HttpStatus.OK;
+               userService.resetPasswordUser(email, passwordEncoder.encode(password));
+               return HttpStatus.OK;
     }
     @PostMapping("/validate")
     public String validateOTP(@RequestParam(name = "email") String email,@RequestParam(name = "otp") Integer otp)
