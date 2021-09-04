@@ -1,13 +1,11 @@
 package com.example.hoya.controllers;
 
 import com.example.hoya.entities.*;
-import com.example.hoya.enums.Status;
 import com.example.hoya.services.OtpService;
 import com.example.hoya.services.UserService;
 import com.example.hoya.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -44,13 +42,23 @@ public class UserController {
     public ResponseEntity<?> login(@RequestBody UserLoginModel user){
         UserPrincipal userPrincipal = userService.findByUsername(user.getUsername());
         User user1 = new User();
+        user1.setId(userPrincipal.getUserId());
         user1.setUsername(user.getUsername());
         user1.setPassword(user.getPassword());
+        user1.setRole(userPrincipal.getRole());
         if(user == null || !new BCryptPasswordEncoder().matches(user.getPassword(), userPrincipal.getPassword())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("tài khoản hoặc mật khẩu không chính xác");
         }
         String token = jwtUtil.generateToken(user1);
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/login/success")
+    public ResponseEntity<?> loginSuccess(@RequestBody String token){
+        Long userid = jwtUtil.getUserIdFromJWT(token);
+        UserPrincipal user = userService.findById(userid);
+        String userRole = user.getRole().getName();
+        return ResponseEntity.ok(userRole);
     }
 
     @PostMapping("/register")
