@@ -143,5 +143,9 @@ public class UserController {
         }
         return new ResponseEntity<>("Không tìm thấy email", HttpStatus.BAD_REQUEST);
     }
+    @RequestMapping("/testapi")
+    public String TestApi(){
+        return "Đúng api rồi";
+    }
 
 }
