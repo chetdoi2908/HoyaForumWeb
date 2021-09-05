@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@EnableWebSecurity
 @Configuration
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -34,10 +33,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(getEncoder());
     }
 
-    // .cors().and()
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf()
+        http.cors()
+                .and()
+                .csrf()
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/register", "/login", "/delete", "logout", "/confirm", "/topic")
