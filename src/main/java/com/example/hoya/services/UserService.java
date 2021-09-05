@@ -20,4 +20,6 @@ public interface UserService {
 
     UserPrincipal findById(Long id);
 
+    boolean checkLoginEmail(String email);
+
 }

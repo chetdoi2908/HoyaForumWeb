@@ -34,7 +34,7 @@ public class TopicServiceImpl implements TopicService{
 
     @Override
     public List<Topic> findAllByStatus() {
-        List<Topic> topic = topicRepository.findByIsActive(Status.ACTIVE);
+        List<Topic> topic = topicRepository. findByIsActive(Status.ACTIVE);
         return topic;
     }
 

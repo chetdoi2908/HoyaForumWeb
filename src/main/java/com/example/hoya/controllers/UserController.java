@@ -135,6 +135,14 @@ public class UserController {
         return ResponseEntity.ok(userResetPasswordModel.getEmail());
     }
 
-
+    @RequestMapping(value = "/checkLoginEmail", method = RequestMethod.POST)
+    public HttpStatus checkLoginEmail(@RequestParam(name = "email") String email)
+    {
+        boolean checkResult = userService.checkLoginEmail(email);
+        if(checkResult){
+            return HttpStatus.OK;
+        }
+        return HttpStatus.BAD_REQUEST;
+    }
 
 }
