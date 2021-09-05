@@ -7,21 +7,42 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+//@Configuration
+//@EnableWebMvc
+//public class CorsConfig {
+//
+//    @Value("${allowed.origin}")
+//    private String allowedOrigin;
+//
+//    @Bean
+//    public WebMvcConfigurer getCorsConfiguration(){
+//        return new WebMvcConfigurer() {
+//            @Override
+//            public void addCorsMappings(CorsRegistry registry) {
+//                registry
+//                        .addMapping("/**")
+//                        .allowedOrigins("http://14.161.47.36:8080")
+//                        .allowedMethods("*")
+//                        .allowedHeaders("*")
+//                        .allowCredentials(true);
+//            }
+//        };
+//    }
+//}
+
 @Configuration
-@EnableWebMvc
 public class CorsConfig {
 
+    public CorsConfig() {
+        super();
+    }
+
     @Bean
-    public WebMvcConfigurer getCorsConfiguration(){
+    public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry
-                        .addMapping("/**")
-                        .allowedOrigins()
-                        .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                registry.addMapping("/**").allowedMethods("HEAD", "GET", "PUT", "POST", "DELETE", "PATCH");
             }
         };
     }

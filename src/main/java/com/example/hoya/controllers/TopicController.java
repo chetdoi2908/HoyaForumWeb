@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin
+@CrossOrigin(origins = "http://14.161.47.36:8080", maxAge = 3600)
 @RestController
 @RequestMapping("/topic")
 public class TopicController {
