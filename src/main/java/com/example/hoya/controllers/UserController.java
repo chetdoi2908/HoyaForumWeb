@@ -136,13 +136,13 @@ public class UserController {
     }
 
     @RequestMapping(value = "/checkLoginEmail", method = RequestMethod.POST)
-    public HttpStatus checkLoginEmail(@RequestParam(name = "email") String email)
+    public ResponseEntity<Object> checkLoginEmail(@RequestParam(name = "email") String email)
     {
         boolean checkResult = userService.checkLoginEmail(email);
         if(checkResult){
-            return HttpStatus.OK;
+            return ResponseEntity.ok(email);
         }
-        return HttpStatus.BAD_REQUEST;
+        return new ResponseEntity<>("Không tìm thấy email", HttpStatus.BAD_REQUEST);
     }
 
 }
