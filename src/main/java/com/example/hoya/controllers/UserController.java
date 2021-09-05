@@ -116,7 +116,6 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    // Info FE để sẵn, chỉ cho user nhập password
     @PostMapping("/resetpassword")
     public ResponseEntity<Object> resetPassword(@RequestBody UserResetPasswordModel userResetPasswordModel)
     {
