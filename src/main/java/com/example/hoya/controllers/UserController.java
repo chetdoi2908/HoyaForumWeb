@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://14.161.47.36:8080")
 @RestController
 @RequestMapping("/user")
 public class UserController {
