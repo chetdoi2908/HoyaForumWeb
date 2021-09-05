@@ -24,7 +24,7 @@ public class EmailServiceImpl implements EmailService{
             helper.setText(email, true);
             helper.setTo(to);
             helper.setSubject(subject);
-            helper.setFrom("onedirection19991999@gmail.com");
+            helper.setFrom("HoyaForum");
             mailSender.send(mimeMessage);
         }catch (MessagingException e){
             System.out.println("gửi mail sai r");
