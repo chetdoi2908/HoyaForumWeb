@@ -1,6 +1,7 @@
 package com.example.hoya.controllers;
 
 import com.example.hoya.entities.Topic;
+import com.example.hoya.entities.UpdateTopicModel;
 import com.example.hoya.services.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class TopicController {
     }
 
     @PutMapping("/updateTopicName")
-    public HttpStatus updateTopicName(@RequestBody Topic topic){
+    public HttpStatus updateTopicName(@RequestBody UpdateTopicModel topic){
         boolean result = topicService.updateTopicName(topic.getId(), topic.getName());
         if(result){
             return HttpStatus.OK;

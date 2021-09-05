@@ -101,6 +101,16 @@ public class UserServiceImpl implements UserService {
         return userPrincipal;
     }
 
+    @Override
+    public boolean checkLoginEmail(String email) {
+        User user = userRepository.findUserByEmail(email);
+        if(user == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
     private String buildCreateUserEmail(String name, String link) {
         return "<p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Chào " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Xin vui lòng bấm vào đường link bên dưới để kích hoạt tài khoản: </p><p><a href=\"" + link + "\">Kích hoạt</a></p><p>Cảm ơn</p>";
     }
