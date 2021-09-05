@@ -11,9 +11,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class CorsConfig {
 
-    @Value("${allowed.origin}")
-    private String allowedOrigin;
-
     @Bean
     public WebMvcConfigurer getCorsConfiguration(){
         return new WebMvcConfigurer() {
@@ -21,7 +18,7 @@ public class CorsConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry
                         .addMapping("/**")
-                        .allowedOrigins("http://14.161.47.36:8080")
+                        .allowedOrigins()
                         .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
