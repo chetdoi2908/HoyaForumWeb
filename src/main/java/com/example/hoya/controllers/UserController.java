@@ -112,8 +112,6 @@ public class UserController {
         // success message
         response.put("status", "success");
         response.put("message", "Đã gửi mã otp, xin vui lòng kiểm tra email.");
-
-//        userService.sendEmailResetPassword(email, isGenerated);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
