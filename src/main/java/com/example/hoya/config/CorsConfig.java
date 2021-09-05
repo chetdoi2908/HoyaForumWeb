@@ -21,8 +21,7 @@ public class CorsConfig {
                         .addMapping("/**")
                         .allowedOrigins("http://14.161.47.36:8080")
                         .allowedMethods("*")
-                        .allowedHeaders("*")
-                        .allowCredentials(false);
+                        .allowedHeaders("*");
             }
         };
     }
