@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findByEmail(String email) {
-        User user = userRepository.findUserByEmail(email); // chỗ này nó tìm ko dc thì phải cíu t :v
+        User user = userRepository.findUserByEmail(email);
         return user;
     }
 
