@@ -42,4 +42,14 @@ public class TopicController {
         return topic;
     }
 
+    @DeleteMapping("/delete/{topicID}")
+    public HttpStatus delete(@PathVariable(name = "topicID") Long topicID){
+        if(topicService.deleteTopic(topicID))
+        {
+            return HttpStatus.OK;
+        }else{
+            return HttpStatus.BAD_REQUEST;
+        }
+    }
+
 }

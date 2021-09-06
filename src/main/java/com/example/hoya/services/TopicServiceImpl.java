@@ -1,6 +1,7 @@
 package com.example.hoya.services;
 
 import com.example.hoya.entities.Topic;
+import com.example.hoya.entities.User;
 import com.example.hoya.enums.Status;
 import com.example.hoya.repositories.TopicRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,18 @@ public class TopicServiceImpl implements TopicService{
     public List<Topic> findAllByStatus() {
         List<Topic> topic = topicRepository. findByIsActive(Status.ACTIVE);
         return topic;
+    }
+
+    @Override
+    public boolean deleteTopic(Long topicID) {
+        Topic topic = topicRepository.findById(topicID).get();
+        if(topic != null){
+            topic.setIsActive(Status.INACTIVE);
+            topicRepository.save(topic);
+            return true;
+        }else{
+            return false;
+        }
     }
 
 }

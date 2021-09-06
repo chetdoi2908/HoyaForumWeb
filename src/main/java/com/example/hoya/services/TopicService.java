@@ -11,4 +11,6 @@ public interface TopicService{
     boolean updateTopicName(Long id, String name);
 
     List<Topic> findAllByStatus();
+
+    boolean deleteTopic(Long topicID);
 }
